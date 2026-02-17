@@ -42,6 +42,16 @@
             "projectName": "albums",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<PhotoAppWebClient>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.appsdeveloperblog.PhotoAppWebClient.Application",
+            "projectName": "PhotoAppWebClient",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Java Album Collection</title>
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ── Fonts ── */
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500&display=swap');
+
+    /* ── Palette ── */
+    :root {
+      --bg: #f5efe6;
+      --card: #faf6ef;
+      --foreground: #2c1a0e;
+      --muted: #8a7460;
+      --accent: #7a4a24;
+      --border: #d6c8b4;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--foreground);
+      line-height: 1.5;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      padding: 64px 24px 40px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.75rem;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: var(--foreground);
+      margin-bottom: 8px;
+    }
+
+    .header .divider {
+      width: 48px;
+      height: 2px;
+      background-color: var(--accent);
+      margin: 16px auto;
+    }
+
+    .header p {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── Album Grid ── */
+    .album-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .card.featured {
+      grid-row: span 2;
+    }
+
+    .card img {
+      display: block;
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+    }
+
+    .card.featured img {
+      height: 100%;
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    .card-body .tag {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      background-color: rgba(122, 74, 36, 0.1);
+      padding: 3px 10px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+
+    .card-body h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+
+    .card-body .location {
+      font-size: 0.8125rem;
+      color: var(--muted);
+    }
+
+    /* ── Counter strip ── */
+    .counter {
+      text-align: center;
+      padding: 0 24px 48px;
+    }
+
+    .counter span {
+      font-size: 0.8125rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .album-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .card.featured {
+        grid-row: span 1;
+      }
+
+      .card.featured img {
+        height: 240px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .album-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .header {
+        padding: 40px 16px 24px;
+      }
+
+      .header h1 {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>Java Album Collection</h1>
+    <div class="divider"></div>
+    <p>A curated gallery of photographs from the island of Java, Indonesia &mdash; temples, volcanoes, traditions, and daily life.</p>
+  </header>
+
+  <main class="album-grid">
+
+    <!-- Featured: Borobudur -->
+    <div class="card featured">
+      <img src="https://picsum.photos/312/480" alt="Borobudur temple at sunrise with misty volcanic landscape">
+      <div class="card-body">
+        <span class="tag">Temple</span>
+        <h2>Borobudur at Sunrise</h2>
+        <p class="location">Magelang, Central Java</p>
+      </div>
+    </div>
+
+    <!-- Java Coffee -->
+    <div class="card">
+      <img src="https://picsum.photos/250/330" alt="Traditional Javanese coffee preparation on a rustic table">
+      <div class="card-body">
+        <span class="tag">Culture</span>
+        <h2>Kopi Jawa</h2>
+        <p class="location">Yogyakarta</p>
+      </div>
+    </div>
+
+    <!-- Rice Terraces -->
+    <div class="card">
+      <img src="https://picsum.photos/420/280" alt="Lush green rice terraces with a farmer in the distance">
+      <div class="card-body">
+        <span class="tag">Landscape</span>
+        <h2>Rice Terraces</h2>
+        <p class="location">Karanganyar, Central Java</p>
+      </div>
+    </div>
+
+    <!-- Batik -->
+    <div class="card">
+      <img src="https://picsum.photos/360/240" alt="Artisan creating traditional batik fabric with a canting tool">
+      <div class="card-body">
+        <span class="tag">Craft</span>
+        <h2>Batik Making</h2>
+        <p class="location">Solo, Central Java</p>
+      </div>
+    </div>
+
+    <!-- Featured: Bromo -->
+    <div class="card featured">
+      <img src="https://picsum.photos/500/350" alt="Mount Bromo volcanic crater with smoke rising at dawn">
+      <div class="card-body">
+        <span class="tag">Volcano</span>
+        <h2>Mount Bromo at Dawn</h2>
+        <p class="location">Probolinggo, East Java</p>
+      </div>
+    </div>
+
+    <!-- Wayang -->
+    <div class="card">
+      <img src="https://picsum.photos/280/420" alt="Traditional wayang kulit shadow puppet performance">
+      <div class="card-body">
+        <span class="tag">Tradition</span>
+        <h2>Wayang Kulit</h2>
+        <p class="location">Surakarta</p>
+      </div>
+    </div>
+
+    <!-- Prambanan -->
+    <div class="card">
+      <img src="https://picsum.photos/320/200" alt="Prambanan Hindu temple spires at golden hour">
+      <div class="card-body">
+        <span class="tag">Temple</span>
+        <h2>Prambanan Temple</h2>
+        <p class="location">Sleman, Yogyakarta</p>
+      </div>
+    </div>
+
+    <!-- Market -->
+    <div class="card">
+      <img src="https://picsum.photos/450/300" alt="Colorful traditional Javanese market with fruits and spices">
+      <div class="card-body">
+        <span class="tag">Daily Life</span>
+        <h2>Pasar Tradisional</h2>
+        <p class="location">Malang, East Java</p>
+      </div>
+    </div>
+
+    <!-- Gamelan -->
+    <div class="card">
+      <img src="https://picsum.photos/390/260" alt="Traditional gamelan bronze instruments with golden carvings">
+      <div class="card-body">
+        <span class="tag">Music</span>
+        <h2>Gamelan Orchestra</h2>
+        <p class="location">Kraton, Yogyakarta</p>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="counter">
+    <span>9 photographs &middot; Java, Indonesia</span>
+  </div>
+
+  <footer class="footer">
+    Java Album Collection
+  </footer>
+
+</body>
+</html>
