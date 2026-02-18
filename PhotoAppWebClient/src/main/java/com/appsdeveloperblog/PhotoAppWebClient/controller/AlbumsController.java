@@ -17,13 +17,13 @@ public class AlbumsController {
 
         AlbumRest album = new AlbumRest();
         album.setAlbumId("albumone");
-        album.setalbumTitle("album one title");
-        album.setalbumUrl("http://localhost:8082/albums/1");
+        album.setAlbumTitle("album one title");
+        album.setAlbumUrl("http://localhost:8082/albums/1");
 
         AlbumRest album2 = new AlbumRest();
-        album.setAlbumId("albumtwo");
-        album.setalbumTitle("album two title");
-        album.setalbumUrl("http://localhost:8082/albums/2");
+        album2.setAlbumId("albumtwo");
+        album2.setAlbumTitle("album two title");
+        album2.setAlbumUrl("http://localhost:8082/albums/2");
 
         List returnValue = Arrays.asList(album, album2);
 

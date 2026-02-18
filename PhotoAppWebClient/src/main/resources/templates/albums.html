@@ -194,109 +194,23 @@
 
   <main class="album-grid">
 
-    <!-- Featured: Borobudur -->
-    <div class="card featured">
-      <img src="https://picsum.photos/312/480" alt="Borobudur temple at sunrise with misty volcanic landscape">
+    <div th:if="${albums.empty}">
+      <p>No albums found</p>
+    </div>
+    
+    <div th:each="album : ${albums}" class="card">
+      <img src="https://picsum.photos/250/330" th:alt="${album.albumTitle}">
       <div class="card-body">
-        <span class="tag">Temple</span>
-        <h2>Borobudur at Sunrise</h2>
-        <p class="location">Magelang, Central Java</p>
+        <span class="tag" th:text="${album.albumId}"></span>
+        <h2 th:text="${album.albumTitle}"></h2>
+        <p class="location" th:text="${album.albumUrl}"></p>
       </div>
     </div>
-
-    <!-- Java Coffee -->
-    <div class="card">
-      <img src="https://picsum.photos/250/330" alt="Traditional Javanese coffee preparation on a rustic table">
-      <div class="card-body">
-        <span class="tag">Culture</span>
-        <h2>Kopi Jawa</h2>
-        <p class="location">Yogyakarta</p>
-      </div>
-    </div>
-
-    <!-- Rice Terraces -->
-    <div class="card">
-      <img src="https://picsum.photos/420/280" alt="Lush green rice terraces with a farmer in the distance">
-      <div class="card-body">
-        <span class="tag">Landscape</span>
-        <h2>Rice Terraces</h2>
-        <p class="location">Karanganyar, Central Java</p>
-      </div>
-    </div>
-
-    <!-- Batik -->
-    <div class="card">
-      <img src="https://picsum.photos/360/240" alt="Artisan creating traditional batik fabric with a canting tool">
-      <div class="card-body">
-        <span class="tag">Craft</span>
-        <h2>Batik Making</h2>
-        <p class="location">Solo, Central Java</p>
-      </div>
-    </div>
-
-    <!-- Featured: Bromo -->
-    <div class="card featured">
-      <img src="https://picsum.photos/500/350" alt="Mount Bromo volcanic crater with smoke rising at dawn">
-      <div class="card-body">
-        <span class="tag">Volcano</span>
-        <h2>Mount Bromo at Dawn</h2>
-        <p class="location">Probolinggo, East Java</p>
-      </div>
-    </div>
-
-    <!-- Wayang -->
-    <div class="card">
-      <img src="https://picsum.photos/280/420" alt="Traditional wayang kulit shadow puppet performance">
-      <div class="card-body">
-        <span class="tag">Tradition</span>
-        <h2>Wayang Kulit</h2>
-        <p class="location">Surakarta</p>
-      </div>
-    </div>
-
-    <!-- Prambanan -->
-    <div class="card">
-      <img src="https://picsum.photos/320/200" alt="Prambanan Hindu temple spires at golden hour">
-      <div class="card-body">
-        <span class="tag">Temple</span>
-        <h2>Prambanan Temple</h2>
-        <p class="location">Sleman, Yogyakarta</p>
-      </div>
-    </div>
-
-    <!-- Market -->
-    <div class="card">
-      <img src="https://picsum.photos/450/300" alt="Colorful traditional Javanese market with fruits and spices">
-      <div class="card-body">
-        <span class="tag">Daily Life</span>
-        <h2>Pasar Tradisional</h2>
-        <p class="location">Malang, East Java</p>
-      </div>
-    </div>
-
-    <!-- Gamelan -->
-    <div class="card">
-      <img src="https://picsum.photos/390/260" alt="Traditional gamelan bronze instruments with golden carvings">
-      <div class="card-body">
-        <span class="tag">Music</span>
-        <h2>Gamelan Orchestra</h2>
-        <p class="location">Kraton, Yogyakarta</p>
-      </div>
-    </div>
-
-
-                    <div th:if="${albums.empty}">
-                    <div>No albums found</div>
-                </div>
-                
-                <div th:each="album : ${albums}">
-                    <p><span th:text="${album.albumTitle}"></span></p>
-                </div>
 
   </main>
 
   <div class="counter">
-    <span>9 photographs &middot; Java, Indonesia</span>
+    <span th:text="'Albums from API'"></span>
   </div>
 
   <footer class="footer">

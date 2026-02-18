@@ -13,8 +13,6 @@ public class AlbumRest {
     private String albumDescription;
     private String albumUrl;
 
-    
-
     /**
      * @return the userId
      */
@@ -28,19 +26,19 @@ public class AlbumRest {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    
+
     /**
-     * @return the albumId
+     * @return the photoId
      */
-    public String getalbumId() {
-        return albumId;
+    public String getPhotoId() {
+        return photoId;
     }
 
     /**
-     * @param albumId the albumId to set
+     * @param photoId the photoId to set
      */
-    public void setalbumId(String albumId) {
-        this.albumId = albumId;
+    public void setPhotoId(String photoId) {
+        this.photoId = photoId;
     }
 
     /**
@@ -60,43 +58,42 @@ public class AlbumRest {
     /**
      * @return the albumTitle
      */
-    public String getalbumTitle() {
+    public String getAlbumTitle() {
         return albumTitle;
     }
 
     /**
      * @param albumTitle the albumTitle to set
      */
-    public void setalbumTitle(String albumTitle) {
+    public void setAlbumTitle(String albumTitle) {
         this.albumTitle = albumTitle;
     }
 
     /**
      * @return the albumDescription
      */
-    public String getalbumDescription() {
+    public String getAlbumDescription() {
         return albumDescription;
     }
 
     /**
      * @param albumDescription the albumDescription to set
      */
-    public void setalbumDescription(String albumDescription) {
+    public void setAlbumDescription(String albumDescription) {
         this.albumDescription = albumDescription;
     }
 
     /**
      * @return the albumUrl
      */
-    public String getalbumUrl() {
+    public String getAlbumUrl() {
         return albumUrl;
     }
 
     /**
      * @param albumUrl the albumUrl to set
      */
-    public void setalbumUrl(String albumUrl) {
+    public void setAlbumUrl(String albumUrl) {
         this.albumUrl = albumUrl;
     }
-
 }
