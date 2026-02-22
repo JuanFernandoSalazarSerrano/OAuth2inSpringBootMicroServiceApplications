@@ -16,29 +16,39 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.client.RestTemplate;
 
 import com.appsdeveloperblog.PhotoAppWebClient.response.AlbumRest;
 
 @Controller
 public class AlbumsController {
 
-    // create an oauth2ClientService object to interact with the access token 
+    // this service loads the OAuth2AuthorizedClient associated with a user and client registration. 
+    // That object holds the access token, refresh token, and metadata.
 	@Autowired
 	OAuth2AuthorizedClientService oauth2ClientService;
 
+
+    @Autowired
+    RestTemplate restTemplate;
+
     @GetMapping("/albumsjava")
     public String getAlbums(Model model,
-        // @AuthenticationPrincipal injects the principal in its specified implementation in this case, open id connect
+        // @AuthenticationPrincipal injects the authenticated user as an OIDC identity, not just any principal
          @AuthenticationPrincipal OidcUser principal) { 
 
-		// use securitycontextholder to access the security context and obtain the access token to identify the currently authenticated user 
+		// use securitycontextholder to access the security context and obtain the Authentication from the security
+        //  context so you can identify which OAuth2 client and which user to use when loading the authorized client.
 		Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
         
-        // cast the abstract authentication access token to an especific implementation, in this case outh2 (could be, okta, google, facebook, etc) 
+        // cast the abstract authentication to an especific implementation which represents 
+        // an OAuth2-authenticated user and contains the client registration ID used during login.
+        // , in this case outh2 (could be, okta, google, facebook, etc) 
 		OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
 		
-        // this will be used to authorize this client object with the access token and the username
-		OAuth2AuthorizedClient oauth2Client = oauth2ClientService.loadAuthorizedClient(oauthToken.getAuthorizedClientRegistrationId(), 
+        // This loads the previously authorized client associated with the current user and OAuth2 provider.
+        //  The authorized client contains the access token issued during login.
+        OAuth2AuthorizedClient oauth2Client = oauth2ClientService.loadAuthorizedClient(oauthToken.getAuthorizedClientRegistrationId(), 
 				oauthToken.getName());
 		
         // gettoken value returns an string to display it with sout
@@ -52,20 +62,24 @@ public class AlbumsController {
 		String idTokenValue = idToken.getTokenValue();
 		System.out.println("idTokenValue = " + idTokenValue);
 
+        String url = 
 
-        AlbumRest album = new AlbumRest();
-        album.setAlbumId("albumone");
-        album.setAlbumTitle("album one title");
-        album.setAlbumUrl("http://localhost:8082/albums/1");
+        restTemplate.exchange(url, null, null, null)
 
-        AlbumRest album2 = new AlbumRest();
-        album2.setAlbumId("albumtwo");
-        album2.setAlbumTitle("album two title");
-        album2.setAlbumUrl("http://localhost:8082/albums/2");
 
-        List returnValue = Arrays.asList(album, album2);
+        // AlbumRest album = new AlbumRest();
+        // album.setAlbumId("albumone");
+        // album.setAlbumTitle("album one title");
+        // album.setAlbumUrl("http://localhost:8082/albums/1");
 
-        model.addAttribute("albums", returnValue);
+        // AlbumRest album2 = new AlbumRest();
+        // album2.setAlbumId("albumtwo");
+        // album2.setAlbumTitle("album two title");
+        // album2.setAlbumUrl("http://localhost:8082/albums/2");
+
+        // List returnValue = Arrays.asList(album, album2);
+
+        // model.addAttribute("albums", returnValue);
         
         return "albums";
 
