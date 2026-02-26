@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,11 +29,15 @@ import com.appsdeveloperblog.PhotoAppWebClient.response.AlbumRest;
 @Controller
 public class AlbumsController {
 
+    @Bean
+    RestTemplate getRestTemplate() {
+        return new RestTemplate();
+    }
+
     // this service loads the OAuth2AuthorizedClient associated with a user and client registration. 
     // That object holds the access token, refresh token, and metadata.
 	@Autowired
 	OAuth2AuthorizedClientService oauth2ClientService;
-
 
     @Autowired
     RestTemplate restTemplate;
