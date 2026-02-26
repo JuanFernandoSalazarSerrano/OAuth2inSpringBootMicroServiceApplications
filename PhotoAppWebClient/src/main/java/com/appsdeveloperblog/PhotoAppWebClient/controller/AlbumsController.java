@@ -5,6 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,10 +67,18 @@ public class AlbumsController {
 		String idTokenValue = idToken.getTokenValue();
 		System.out.println("idTokenValue = " + idTokenValue);
 
-        String url = 
+        String url = "http://localhost:8082/albums" ;
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + jwtAccessToken);
 
-        restTemplate.exchange(url, null, null, null)
+        HttpEntity<List<AlbumRest>> entity = new HttpEntity<>(headers);
+        
+        ParameterizedTypeReference responseType = new ParameterizedTypeReference<List<AlbumRest>>() {};
 
+        ResponseEntity<List<AlbumRest>> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
+        
+        List<AlbumRest> albums = responseEntity.getBody();
 
         // AlbumRest album = new AlbumRest();
         // album.setAlbumId("albumone");
@@ -79,7 +92,7 @@ public class AlbumsController {
 
         // List returnValue = Arrays.asList(album, album2);
 
-        // model.addAttribute("albums", returnValue);
+        model.addAttribute("albums", albums);
         
         return "albums";
 
