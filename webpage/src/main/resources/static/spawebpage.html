@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexora Bank</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+
+
+<script language="javascript">
+
+// generate an alphanumeric string of values
+function generateState(length) {
+    // define state value
+    var stateValue = "";
+    // this chars will be used
+    var alphaNumericCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    // length of chars list
+    var alphaNumericCharactersLength = alphaNumericCharacters.length;
+    // loop an append random values to your state lenght number of times
+    for (var i = 0; i < length; i++) {
+        stateValue += alphaNumericCharacters.charAt(Math.floor(Math.random() * alphaNumericCharactersLength));
+    }
+    // look for an html element with that value, and set stateValue to that element (its used for secret forms to perform POST request) 
+    document.getElementById("stateValue").innerHTML = stateValue;
+
+    // this is used to protect agains CSRF (sad xss poc noises)
+}
+
+// generate the initial code for the code challenge
+function generateCodeVerifier() {
+    //state
+    var returnValue = "";
+    var randomByteArray = new Uint8Array(32);
+    window.crypto.getRandomValues(randomByteArray);
+
+    returnValue = base64urlencode(randomByteArray);
+    
+    document.getElementById("codeVerifierValue").innerHTML = returnValue;
+}
+
+async function generateCodeChallenge() {
+    var codeChallengeValue = "";
+
+    var codeVerifier = document.getElementById("codeVerifierValue").innerHTML;
+
+    var textEncoder = new TextEncoder('US-ASCII');
+    var encodedValue = textEncoder.encode(codeVerifier);
+    var digest = await window.crypto.subtle.digest("SHA-256", encodedValue);
+
+    codeChallengeValue = base64urlencode(Array.from(new Uint8Array(digest)));
+    
+    document.getElementById("codeChallengeValue").innerHTML = codeChallengeValue;
+}
+
+
+function base64urlencode(sourceValue) {
+    var stringValue = String.fromCharCode.apply(null, sourceValue);
+    var base64Encoded = btoa(stringValue);
+    var base64urlEncoded = base64Encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    return base64urlEncoded;
+}
+
+
+function getAuthCode() {
+    var state = document.getElementById("stateValue").innerHTML;
+    var codeChallenge = document.getElementById("codeChallengeValue").innerHTML;
+
+    var authorizationURL = "http://localhost:9999/realms/vmsecarealm/protocol/openid-connect/auth";
+    authorizationURL += "?client_id=photo-app-pkce-client";
+    authorizationURL += "&response_type=code";
+    authorizationURL += "&scope=openid";
+    authorizationURL += "&redirect_uri=http://localhost:8080/authcodeReader.html";
+    // optional but NOT optional
+    authorizationURL += "&state=" + state;
+    authorizationURL += "&code_challenge=" + codeChallenge;
+    authorizationURL += "&code_challenge_method=S256";
+    
+    window.open(authorizationURL, 'authorizationRequestWindow', 'width=800,height=600,left=200,top=200');
+}
+
+// verify the state is valid
+function postAuthorize(state, authCode) {
+	var originalStateValue = document.getElementById("stateValue").innerHTML;
+	
+	if(state === originalStateValue) {
+        //
+		requestTokens(authCode);
+	} else {
+		alert("Invalid state value received");
+	} 
+}
+
+// ajax call to the auth server 
+function requestTokens(authCode) {
+    var codeVerifier = document.getElementById("codeVerifierValue").innerHTML;
+    var data = {
+        "grant_type": "authorization_code",
+        "client_id": "photo-app-pkce-client",
+        "code": authCode,
+        "code_verifier": codeVerifier,
+        "redirect_uri":"http://localhost:8080/authcodeReader.html"
+    };
+
+    $.ajax({
+        beforeSend: function (request) {
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+        },
+        type: "POST",
+        url: "http://localhost:9999/realms/vmsecarealm/protocol/openid-connect/token",
+        data: data,
+        success: postRequestAccessToken,
+        dataType: "json"
+    });
+}
+
+// save the data of the ajax call in the span html tag with id accessToken
+function postRequestAccessToken(data, status, jqXHR) {
+    document.getElementById("accessToken").innerHTML = data["access_token"];
+}
+
+// lets consume some protected server through an api gateway
+function getInfoFromResourceServer(){
+	 
+    var accessToken = document.getElementById("accessToken").innerHTML;
+
+    $.ajax({
+        beforeSend: function (request) {
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+            request.setRequestHeader("Authorization", "Bearer " + accessToken);
+        },
+        type: "GET",
+        url: "http://localhost:8082/users/status/check",
+        success: postInfoFromAccessToken,
+        dataType: "text"
+    });
+}
+// display in an alert the response of the resource server
+function postInfoFromAccessToken(data, status, jqXHR) {
+    alert(data);
+}
+
+</script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f4f6f9;
+color:#333;
+}
+
+header{
+background:#0f172a;
+color:white;
+padding:20px 60px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:25px;
+font-size:14px;
+opacity:0.9;
+}
+
+nav a:hover{
+opacity:1;
+}
+
+.hero{
+padding:80px 60px;
+background:linear-gradient(120deg,#0f172a,#1e3a8a);
+color:white;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.hero-text{
+max-width:500px;
+}
+
+.hero h1{
+font-size:40px;
+margin-bottom:15px;
+}
+
+.hero p{
+opacity:0.9;
+margin-bottom:25px;
+line-height:1.6;
+}
+
+.btn{
+background:white;
+color:#1e3a8a;
+padding:12px 25px;
+border-radius:6px;
+text-decoration:none;
+font-weight:bold;
+}
+
+.section{
+padding:70px 60px;
+text-align:center;
+}
+
+.section h2{
+margin-bottom:40px;
+font-size:28px;
+}
+
+.cards{
+display:flex;
+gap:25px;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+.card{
+background:white;
+padding:30px;
+width:260px;
+border-radius:10px;
+box-shadow:0 8px 20px rgba(0,0,0,0.08);
+transition:0.2s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.card h3{
+margin-bottom:10px;
+color:#1e3a8a;
+}
+
+.card p{
+font-size:14px;
+opacity:0.8;
+}
+
+footer{
+background:#0f172a;
+color:white;
+text-align:center;
+padding:25px;
+font-size:14px;
+margin-top:50px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">Nexora Bank</div>
+
+<nav>
+<a href="#">Inicio</a>
+<a href="#">Cuentas</a>
+<a href="#">Préstamos</a>
+<a href="#">Tarjetas</a>
+<a href="#">Soporte</a>
+
+<div id="stateValue"></div>
+<div><input type="button" value="Generate state value" onclick="generateState(30)"/></div>
+
+<div id="codeVerifierValue"></div>
+<div><input type="button" value="Generate Code Verifier value" onclick="generateCodeVerifier()"/></div>
+
+<div id="codeChallengeValue"></div>
+<div><input type="button" value="Generate Code Challenge value" onclick="generateCodeChallenge()"/></div>
+<br/>
+<div><input type="button" value="Get Auth Code" onclick="getAuthCode()"/></div>
+
+ <p>Access token: <span id="accessToken"></span></p>
+
+  <br/>
+  <div><input type="button" value="Load" onclick="getInfoFromResourceServer()"/></div>
+
+</nav>
+</header>
+
+<section class="hero">
+
+<div class="hero-text">
+<h1>Tu banco digital moderno</h1>
+<p>
+Administra tus finanzas de forma segura, rápida y sencilla
+con la plataforma bancaria diseñada para el futuro.
+</p>
+
+<a class="btn" href="#">Abrir cuenta</a>
+</div>
+
+</section>
+
+<section class="section">
+
+<h2>Nuestros servicios</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Cuentas digitales</h3>
+<p>Abrir y gestionar tu cuenta bancaria en minutos desde cualquier dispositivo.</p>
+</div>
+
+<div class="card">
+<h3>Préstamos rápidos</h3>
+<p>Solicita crédito con aprobación rápida y tasas competitivas.</p>
+</div>
+
+<div class="card">
+<h3>Tarjetas seguras</h3>
+<p>Control total de tus tarjetas con protección avanzada contra fraude.</p>
+</div>
+
+</div>
+
+</section>
+
+<footer>
+© 2026 Nexora Bank — Demo educativa
+</footer>
+
+</body>
+</html>

@@ -52,6 +52,16 @@
             "projectName": "PhotoAppWebClient",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-WebpageApplication<webpage>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.singlespa.webpage.WebpageApplication",
+            "projectName": "webpage",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

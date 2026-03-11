@@ -27,7 +27,7 @@ import org.springframework.web.client.RestTemplate;
 import com.appsdeveloperblog.PhotoAppWebClient.response.AlbumRest;
 
 
-@Controller
+// @Controller
 public class AlbumsController {
 
     // this service loads the OAuth2AuthorizedClient associated with a user and client registration. 

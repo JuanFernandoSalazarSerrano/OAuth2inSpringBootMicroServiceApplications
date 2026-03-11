@@ -5,10 +5,16 @@ spring:
   cloud:
     gateway:
       server:
-        webmvc:
-          routes:
-            - id: users-status-check
-              uri: http://localhost:2828
-              predicates:
-              - Path=/users/status/check
-              - Method=GET
+        webflux:
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowedOrigins: "*"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders:
+                  - "*"

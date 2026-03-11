@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/token")
 public class TokenController {
 
-
     @GetMapping
     public Map<String, Jwt> getToken(@AuthenticationPrincipal Jwt jwt){
 
